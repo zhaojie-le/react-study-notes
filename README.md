@@ -44,3 +44,68 @@ constructor (props) {
 决定一个组件什么时候不需要渲染
 
 ## 五:父子组件间通信
+### 1: 父－－>子 传參
+子组件中定义一个变量caption变量，需要从父组件中传递到子组件中
+* 子组件中
+```js
+import React, { Component } from 'react';
+// 引入传递参数定义属性
+import PropTypes from 'prop-types';
+// 实例一个组件
+class Counter extends Component {
+  constructor (props) {
+    // super(props)调用父组件React.Component的构造函数，若没有该行代码，则子组件实例后，无法通过this.props访问到父组件传递的props值
+    super(props);
+    // 定义组件内使用的变量
+    this.state = {
+      count: 0
+    }
+  }
+  // 触发像父组件传递变量的方法
+  changeProps () {
+    let a = '传递参数a'
+    let b = '传递参数b'
+    this.props.onUpdate(a, b)
+  }
+
+  render () {
+    // 通过this.props访问传入的参数值
+    const {caption} = this.props
+    return (
+      <div>{caption}</div>
+    )
+  }
+}
+// 在子组件中定义需要从父组件传递的参数，中间string代表参数的类型，后面的isRequired定义是必须传递参数
+Counter.propTypes = {
+  caption: PropTypes.string.isRequired,
+  onUpdate: PropTypes.func
+}
+// 父子组件通信的函数，可以将子组件的参数传递给父组件，供父组件处理
+Counter.defaultProps = {
+  onUpdate: f => f   // 默认是一个什么都不做的函数
+}
+export default Counter
+```
+* 父组件
+```js
+import React, { Component } from 'react';
+import Counter from './Counter'  // 引入子组件模块
+class ControlPanel extends Component {
+  constructor (props) {
+    super(props)
+    // 子组件中传递到父组件函数onUpdate绑定的当前事件绑定到实例中
+    this.onCounterUpdata = this.onCounterUpdata.bind(this)
+  }
+  render () {
+    return (
+      <div>
+        <Counter onUpdate={this.onCounterUpdata} caption="First"></Counter>
+      </div>
+    )
+  }
+}
+export default ControlPanel
+```
+* 同vue的区别
+事件需要显式的声明绑定到实例上，通过.bind，将this指定到当前的实例中
