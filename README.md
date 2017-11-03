@@ -23,7 +23,7 @@ constructor (props) {
 * getDefaultProps
 * componentWillMount 基本上不用，放到constructor
 * render  渲染纯函数
-* componentDidMount  
+* componentDidMount   dom渲染完成后，获取数据
 ### 3-2: Update，组件被重新渲染的过程
 ### 3-3: Unmount，组件从DOM中删除的过程
 
@@ -45,6 +45,7 @@ constructor (props) {
 
 ## 五:父子组件间通信
 ### 1: 父－－>子 传參
+参考demo中example-base
 子组件中定义一个变量caption变量，需要从父组件中传递到子组件中
 * 子组件中
 ```js
@@ -109,3 +110,40 @@ export default ControlPanel
 ```
 * 同vue的区别
 事件需要显式的声明绑定到实例上，通过.bind，将this指定到当前的实例中
+## 六：Flux的实践－参考demo中example-flux中例子
+## 七：Redux的学习
+### redux的基础应用－参考demo中expample-redux
+### redux的进一步，创建全局context 参考demo中example-redux-context
+### react-redux的使用，参考demo中example-react-redux
+### 三个基本原则
+* 唯一数据源
+应用的状态数据应该只存储在唯一的一个Store上，整个应用只保存一个Store，所有组件的数据源就是这个Store上的状态
+
+* 保持状态可读
+不能直接去修改状态，要修改Store的状态，必须要通过派发一个Action对象来修改Store状态
+
+* 数据改变只能通过纯函数完成
+## 八 模块化react和redux的应用
+### 第一步创建一个复杂的应用
+* 模块化应用的要点
+* 代码文件的组织方式
+* 状态树的设计
+* 开发辅助工具
+#### 模块化应用要点
+* 代码文件的组织结构
+* 确定模块的边界
+* Store的状态树设计
+## 九 异步数据请求
+在react渲染生命周期中，组件的componentDidMount函数中异步请求数据最为合理
+### 开发过程中的接口代理
+本地开发过程中，往往借口涉及到跨域访问，若用react-create-app创建项目，可以使用根目录下package.json中的
+```js
+"proxy":"http://www..." 
+```
+该应用接收到不是要求本地资源的HTTP请求时，这个请求的协议和域名会替换成proxy中的部分，转手发送该请求，并将接收到的结果返还给浏览器，这样就实现了代理功能
+### redux管理异步数据
+访问服务器的action，至少涉及三个action类型：
+* 表示异步操作已经开始的action,表示请求信息的请求已经发送给服务器的状态－异步操作正在进行状态
+* 表示异步操作成功的action－异步操作已经成功完成
+* 表示异步操作失败的action－异步操作已经失败
+当上述三种类型的action被派发时，会让React组件进入各自不同的三种状态
